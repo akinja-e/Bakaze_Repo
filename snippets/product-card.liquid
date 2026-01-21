@@ -1,34 +1,119 @@
 <div class="w-full py-6 px-3">
-  <div class="border bg-white shadow-lg rounded-lg overflow-hidden">
-    <a href="{{ product_product.url }}">
+  <div class="border bg-white shadow-lg rounded-lg overflow-hidden group">
+    <a
+      href="{{ product_product.url }}"
+      aria-label="View {{ product_product.title }}"
+      class="block relative"
+    >
       {% if product_product.featured_image %}
-      <div class="h-80 overflow-hidden">
-        <img
-          class="w-full h-full object-cover transition duration-1000 ease-in-out hover:scale-105 transform"
-          src="{{ product_product.featured_image | img_url : 'medium' }}"
-          alt="{{ product_product.featured_image.alt }}"
-        />
-      </div>
+        <div class="h-80 overflow-hidden relative">
+          <img
+            class="w-full h-full object-cover transition duration-1000 ease-in-out group-hover:scale-105 transform"
+            src="{{ product_product.featured_image | image_url: width: 480 }}"
+            srcset="
+              {{ product_product.featured_image | image_url: width: 320 }} 320w,
+              {{ product_product.featured_image | image_url: width: 480 }} 480w,
+              {{ product_product.featured_image | image_url: width: 640 }} 640w,
+              {{ product_product.featured_image | image_url: width: 960 }} 960w
+            "
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            alt="{{ product_product.featured_image.alt | default: product_product.title }}"
+            loading="lazy"
+          >
 
+          {% unless product_product.available %}
+            <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md font-semibold text-sm shadow-lg">
+              Sold Out
+            </div>
+          {% endunless %}
+
+          {% if product_product.compare_at_price > product_product.price %}
+            <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-md font-semibold text-sm shadow-lg">
+              Sale
+            </div>
+          {% endif %}
+        </div>
       {% else %}
-      {{
-        "product-1"
-          | placeholder_svg_tag : "w-full h-full object-cover bg-gray-100"
-      }}
+        <div class="h-80 relative">
+          {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
+
+          {% unless product_product.available %}
+            <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md font-semibold text-sm shadow-lg">
+              Sold Out
+            </div>
+          {% endunless %}
+        </div>
       {% endif %}
     </a>
 
-    <div class="flex flex-col p-4">
-      <span class="text-sm text-gray-400">{{ product_product.vendor }}</span>
+    <div class="flex flex-col p-4 space-y-2">
+      {% if product_product.vendor %}
+        <span class="text-sm text-gray-400 uppercase tracking-wide">{{ product_product.vendor }}</span>
+      {% endif %}
 
       <a
         href="{{ product_product.url }}"
-        class="text-gray-700 uppercase font-medium"
+        class="text-gray-700 uppercase font-medium hover:text-gray-900 transition-colors line-clamp-2"
       >
         {{- product_product.title -}}
       </a>
 
-      <p class="text-gray-500">{{ product_product.price | money }}</p>
+      <div class="flex items-center gap-2 flex-wrap">
+        {% if product_product.compare_at_price > product_product.price %}
+          <p class="text-gray-400 line-through text-sm">{{ product_product.compare_at_price | money }}</p>
+          <p class="text-red-600 font-semibold">{{ product_product.price | money }}</p>
+          {% comment %}
+            <span class="text-xs text-red-600 font-medium">
+              Save {{ product_product.compare_at_price | minus: product_product.price | money }}
+            </span>
+          {% endcomment %}
+        {% elsif product_product.price_varies %}
+          <p class="text-gray-700 font-medium">From {{ product_product.price_min | money }}</p>
+        {% else %}
+          <p class="text-gray-700 font-medium">{{ product_product.price | money }}</p>
+        {% endif %}
+      </div>
+
+      {% if product_product.available %}
+        <button
+          type="button"
+          class="mt-2 w-full bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors font-medium text-sm"
+          onclick="addToCart('{{ product_product.variants.first.id }}')"
+        >
+          Add to Cart
+        </button>
+      {% else %}
+        <button
+          type="button"
+          class="mt-2 w-full bg-gray-300 text-gray-500 py-2 px-4 rounded cursor-not-allowed font-medium text-sm"
+          disabled
+        >
+          Sold Out
+        </button>
+      {% endif %}
     </div>
   </div>
 </div>
+
+<script>
+  function addToCart(variantId) {
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: variantId,
+        quantity: 1,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Trigger cart update or notification
+        window.location.href = '/cart';
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
