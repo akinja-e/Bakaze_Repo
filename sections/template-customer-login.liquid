@@ -1,0 +1,166 @@
+<!-- sections/template-customer-login.liquid -->
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Login Section -->
+    <div class="bg-white p-8 rounded-lg shadow-md">
+      <div>
+        <h2 class="text-center text-3xl font-bold text-gray-900 mb-2">Sign in to your account</h2>
+        <p class="text-center text-sm text-gray-600 mb-6">
+          Or
+          <a href="{{ routes.account_register_url }}" class="font-medium text-blue-600 hover:text-blue-500">
+            create a new account
+          </a>
+        </p>
+      </div>
+
+      {% form 'customer_login', class: 'mt-8 space-y-6' %}
+        {% if form.errors %}
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <ul class="list-disc list-inside mt-2">
+              {% for error in form.errors %}
+                <li>{{ form.errors.messages[error] }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if form.posted_successfully? %}
+          <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded relative">
+            <p>Successfully logged in!</p>
+          </div>
+        {% endif %}
+
+        <div class="space-y-4">
+          <div>
+            <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1"> Email address </label>
+            <input
+              id="customer_email"
+              name="customer[email]"
+              type="email"
+              autocomplete="email"
+              required
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-gray-900 focus:border-gray-900 focus:z-10 sm:text-sm"
+              placeholder="Email address"
+            >
+          </div>
+
+          <div>
+            <label for="customer_password" class="block text-sm font-medium text-gray-700 mb-1"> Password </label>
+            <input
+              id="customer_password"
+              name="customer[password]"
+              type="password"
+              autocomplete="current-password"
+              required
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-gray-900 focus:border-gray-900 focus:z-10 sm:text-sm"
+              placeholder="Password"
+            >
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+          >
+            Sign in
+          </button>
+        </div>
+
+        <div class="text-center">
+          <a href="#recover" id="recover-toggle" class="text-sm text-blue-600 hover:text-blue-500">
+            Forgot your password?
+          </a>
+        </div>
+      {% endform %}
+    </div>
+
+    <!-- Password Recovery Section -->
+    <div id="recover-password" class="bg-white p-8 rounded-lg shadow-md hidden">
+      <div>
+        <h2 class="text-center text-3xl font-bold text-gray-900 mb-2">Reset your password</h2>
+        <p class="text-center text-sm text-gray-600 mb-6">We will send you an email to reset your password</p>
+      </div>
+
+      {% form 'recover_customer_password', class: 'mt-8 space-y-6' %}
+        {% if form.errors %}
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <p class="mt-1">{{ form.errors.messages.form }}</p>
+          </div>
+        {% endif %}
+
+        {% if form.posted_successfully? %}
+          <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded relative">
+            <p>We've sent you an email with a link to update your password.</p>
+          </div>
+        {% endif %}
+
+        <div>
+          <label for="recover_email" class="block text-sm font-medium text-gray-700 mb-1"> Email address </label>
+          <input
+            id="recover_email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+            placeholder="Email address"
+          >
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+          >
+            Submit
+          </button>
+        </div>
+
+        <div class="text-center">
+          <a href="#" id="hide-recover" class="text-sm text-blue-600 hover:text-blue-500"> Cancel </a>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const recoverToggle = document.getElementById('recover-toggle');
+    const hideRecover = document.getElementById('hide-recover');
+    const loginForm = document.querySelector('.bg-white.p-8.rounded-lg.shadow-md:first-of-type');
+    const recoverForm = document.getElementById('recover-password');
+
+    if (recoverToggle) {
+      recoverToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        loginForm.classList.add('hidden');
+        recoverForm.classList.remove('hidden');
+      });
+    }
+
+    if (hideRecover) {
+      hideRecover.addEventListener('click', function (e) {
+        e.preventDefault();
+        recoverForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+      });
+    }
+
+    if (window.location.hash === '#recover') {
+      loginForm.classList.add('hidden');
+      recoverForm.classList.remove('hidden');
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Customer Login",
+  "settings": []
+}
+{% endschema %}
