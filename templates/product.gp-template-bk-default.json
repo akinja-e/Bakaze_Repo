@@ -1,0 +1,59 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "order": [
+    "template"
+  ],
+  "sections": {
+    "template": {
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_selector",
+        "quantity",
+        "description",
+        "checkout_buttons"
+      ],
+      "blocks": {
+        "checkout_buttons": {
+          "settings": {},
+          "type": "checkout_buttons"
+        },
+        "description": {
+          "settings": {},
+          "type": "description"
+        },
+        "price": {
+          "settings": {},
+          "type": "price"
+        },
+        "quantity": {
+          "settings": {},
+          "type": "quantity"
+        },
+        "title": {
+          "settings": {},
+          "type": "title"
+        },
+        "variant_selector": {
+          "settings": {},
+          "type": "variant_selector"
+        },
+        "vendor": {
+          "settings": {},
+          "type": "vendor"
+        }
+      },
+      "settings": {},
+      "type": "template-product"
+    }
+  }
+}
