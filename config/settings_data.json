@@ -1,6 +1,46 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": "Default",
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_text": "StoreName",
+          "menu": "main-menu",
+          "transparent_header": true
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "footer_description": "Your trusted online store for quality products. We deliver excellence with every order.",
+          "email_address": "",
+          "menu_title_1": "Quick Links",
+          "footer_menu_1": "main-menu",
+          "menu_title_2": "Customer Service",
+          "footer_menu_2": "",
+          "menu_title_3": "Information",
+          "footer_menu_3": "",
+          "show_newsletter": true,
+          "newsletter_heading": "Subscribe to our newsletter",
+          "newsletter_description": "Get the latest updates on new products and upcoming sales.",
+          "social_facebook": "https://www.instagram.com/bakazestore?igsh=MWJkcG14eXpuYW90ZQ%3D%3D&utm_source=qr",
+          "social_tiktok": "https://www.tiktok.com/@bakazestore",
+          "show_payment_icons": true
+        }
+      }
+    },
+    "content_for_index": []
+  },
   "presets": {
-    "Default": { }
+    "Default": {}
   }
 }
