@@ -3,7 +3,7 @@
   href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
 >
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
 
 {% assign selected_variant = product.selected_or_first_available_variant %}
 
@@ -278,6 +278,7 @@
       if (!input) return;
 
       input.value = this.currentVariant.id;
+      form.dataset.variantAvailable = this.currentVariant.available;
       console.log('Updated form variant ID to:', this.currentVariant.id);
     }
 
@@ -313,130 +314,54 @@
 
   customElements.define('variant-selector', VariantSelector);
 </script>
-{% comment %}
-  <script>
-    class VariantSelector extends HTMLElement {
-      constructor() {
-        super();
-        this.onVariantChange = this.onVariantChange.bind(this);
-        this.addEventListener('change', this.onVariantChange);
-      }
-      connectedCallback() {
-        this.getSelectedOptions();
-        this.getSelectedVariant();
-
-        if (this.currentVariant) {
-          this.updateFormID();
-          this.updateAddToCartState();
-        }
-      }
-
-      onVariantChange() {
-        this.getSelectedOptions();
-        this.getSelectedVariant();
-
-        if (!this.currentVariant) return;
-
-        this.updateURL();
-        this.updateFormID();
-        this.updatePrice();
-        this.updateAddToCartState();
-      }
-      getSelectedOptions() {
-        this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
-        console.log(this.options);
-      }
-      getVariantJSON() {
-        this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
-        return this.variantData;
-      }
-      getSelectedVariant() {
-        const variants = this.getVariantJSON();
-        this.currentVariant =
-          variants.find((variant) => {
-            return variant.options.every((opt, index) => opt === this.options[index]);
-          }) || null;
-
-        console.log('Selected variant:', this.currentVariant);
-      }
-      updateURL() {
-        if (!this.currentVariant) return;
-        window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
-      }
-      updateFormID() {
-        const form = document.querySelector('#product-form');
-        if (!form) return;
-
-        const input = form.querySelector('input[name="id"]');
-        if (!input) return;
-
-        input.value = this.currentVariant.id;
-      }
-      updatePrice() {
-        fetch(`${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${this.dataset.section}`)
-          .then((response) => response.text())
-          .then((responseText) => {
-            const id = `price-${this.dataset.section}`;
-            const html = new DOMParser().parseFromString(responseText, 'text/html');
-            const oldPrice = document.getElementById(id);
-            const newPrice = html.getElementById(id);
-            if (oldPrice && newPrice) {
-              oldPrice.innerHTML = newPrice.innerHTML;
-            }
-          });
-      }
-
-      updateAddToCartState() {
-        const btn = document.getElementById(`AddToCartButton-${this.dataset.section}`);
-        if (!btn) return;
-
-        const isAvailable = !!this.currentVariant.available;
-
-        btn.disabled = !isAvailable;
-        btn.textContent = isAvailable ? btn.dataset.addLabel : btn.dataset.soldoutLabel;
-      }
-    }
-    customElements.define('variant-selector', VariantSelector);
-  </script>
-{% endcomment %}
 
 <script>
-  const swiper = new Swiper('.swiper', {
-    direction: 'horizontal',
-    pagination: {
-      el: '.swiper-pagination',
-    },
-    navigation: {
-      prevEl: '.swiper-button-prev',
-      nextEl: '.swiper-button-next',
-    },
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      const swiper = new Swiper('.swiper', {
+        direction: 'horizontal',
+
+        pagination: {
+          el: '.swiper-pagination',
+        },
+
+        navigation: {
+          prevEl: '.swiper-button-prev',
+          nextEl: '.swiper-button-next',
+        },
+      });
+    } catch (e) {
+      console.log('SwiperJS is not defined');
+    }
   });
 </script>
 
-{% comment %}
-  <script>
-    document.addEventListener(
-      'submit',
-      (e) => {
-        const form = e.target.closest("form[action='/cart/add']");
-        if (!form) return;
-
-        const idInput = form.querySelector("input[name='id']");
-        console.log('🛒 FINAL submitted variant ID:', idInput?.value);
-      },
-      true
-    );
-  </script>
-{% endcomment %}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const productForm = document.querySelector('#product-form');
     if (productForm) {
       productForm.addEventListener('submit', (e) => {
         const btn = productForm.querySelector('[type="submit"]');
+
+        // Check if button is disabled
         if (btn && btn.disabled) {
           e.preventDefault();
           alert('This product variant is currently sold out.');
+          return false;
+        }
+
+        // Double-check variant availability from data attribute
+        if (productForm.dataset.variantAvailable === 'false') {
+          e.preventDefault();
+          alert('This product variant is currently sold out.');
+          return false;
+        }
+
+        // Verify the variant ID is set
+        const idInput = productForm.querySelector('input[name="id"]');
+        if (!idInput || !idInput.value) {
+          e.preventDefault();
+          alert('Please select a product variant.');
           return false;
         }
       });

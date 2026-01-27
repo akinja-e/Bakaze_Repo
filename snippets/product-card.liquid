@@ -19,6 +19,8 @@
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             alt="{{ product_product.featured_image.alt | default: product_product.title }}"
             loading="lazy"
+            width="480"
+            height="480"
           >
 
           {% unless product_product.available %}
@@ -78,7 +80,7 @@
         <button
           type="button"
           class="mt-2 w-full bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors font-medium text-sm"
-          onclick="addToCart('{{ product_product.variants.first.id }}')"
+          onclick="addToCart('{{ product_product.variants.first.id }}', this)"
         >
           Add to Cart
         </button>
@@ -96,24 +98,47 @@
 </div>
 
 <script>
-  function addToCart(variantId) {
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: variantId,
-        quantity: 1,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Trigger cart update or notification
-        window.location.href = '/cart';
+  // Prevent multiple definitions
+  if (typeof window.addToCart === 'undefined') {
+    window.addToCart = function (variantId, buttonElement) {
+      // Disable button during request
+      const originalText = buttonElement.textContent;
+      buttonElement.disabled = true;
+      buttonElement.textContent = 'Adding...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: 1,
+        }),
       })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+        .then((response) => {
+          // Check if response is OK (status 200-299)
+          if (!response.ok) {
+            return response.json().then((err) => {
+              throw err;
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Success - now redirect to cart
+          window.location.href = '/cart';
+        })
+        .catch((error) => {
+          // Handle error - show message instead of redirecting
+          console.error('Error adding to cart:', error);
+          buttonElement.disabled = false;
+          buttonElement.textContent = originalText;
+
+          // Show user-friendly error
+          const message = error.message || error.description || 'Could not add to cart. Please try again.';
+          alert(message);
+        });
+    };
   }
 </script>

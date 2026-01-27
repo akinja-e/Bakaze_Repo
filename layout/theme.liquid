@@ -13,17 +13,22 @@
     {{ content_for_header }}
     <!-- Header hook for plugins -->
     {{ 'application.css' | asset_url | stylesheet_tag }}
-    {{ 'application.js' | asset_url | script_tag }}
+    <script src="{{ 'application.js' | asset_url }}" defer></script>
 
-    <script
-      defer
-      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
+    <!-- Alpine.js - Consider downloading and adding to assets folder for production -->
+    <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     {% section 'header' %}
-    <main role="main">
+    <main role="main" class="flex-grow">
       {{ content_for_layout }}
     </main>
+    {% section 'footer' %}
   </body>
 </html>

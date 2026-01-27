@@ -34,8 +34,11 @@
           {% if article.image != blank %}
             <img
               class="w-full h-80 md:h-96 object-cover object-center"
-              src="{{ article.image | img_url : 'large' }}"
-              alt="{{ article.image.alt }}"
+              src="{{ article.image | image_url: width: 1200 }}"
+              alt="{{ article.image.alt | default: article.title }}"
+              width="1200"
+              height="630"
+              loading="lazy"
             >
           {% else %}
             {% assign placeholder_image = 'lifestyle-1' %}

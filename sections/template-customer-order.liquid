@@ -40,6 +40,9 @@
                     src="{{ line_item.image | image_url: width: 200 }}"
                     alt="{{ line_item.title | escape }}"
                     class="w-full h-full object-cover rounded"
+                    width="200"
+                    height="200"
+                    loading="lazy"
                   >
                 {% else %}
                   {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover rounded' }}
