@@ -58,6 +58,17 @@
                 {% render 'icon-tiktok', class: 'w-5 h-5' %}
               </a>
             {% endif %}
+            {% if section.settings.social_instagram != blank %}
+              <a
+                href="{{ section.settings.social_instagram }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-gray-400 hover:text-white transition"
+                aria-label="Instagram"
+              >
+                {% render 'icon-instagram', class: 'w-5 h-5' %}
+              </a>
+            {% endif %}
           </div>
         {% endif %}
       </div>
@@ -339,6 +350,11 @@
       "type": "url",
       "id": "social_tiktok",
       "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL"
     },
     {
       "type": "header",
