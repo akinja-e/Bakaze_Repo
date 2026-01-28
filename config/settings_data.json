@@ -32,8 +32,9 @@
           "show_newsletter": true,
           "newsletter_heading": "Subscribe to our newsletter",
           "newsletter_description": "Get the latest updates on new products and upcoming sales.",
-          "social_facebook": "https://www.instagram.com/bakazestore?igsh=MWJkcG14eXpuYW90ZQ%3D%3D&utm_source=qr",
+          "social_facebook": "https://www.facebook.com/",
           "social_tiktok": "https://www.tiktok.com/@bakazestore",
+          "social_instagram": "https://www.instagram.com/bakazestore?igsh=MWJkcG14eXpuYW90ZQ%3D%3D&utm_source=qr",
           "show_payment_icons": true
         }
       }
