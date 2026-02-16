@@ -22,7 +22,7 @@
         "type": "footer",
         "settings": {
           "footer_description": "Your trusted online store for quality products. We deliver excellence with every order.",
-          "email_address": "",
+          "email_address": "bakazestore@gmail.com",
           "menu_title_1": "Quick Links",
           "footer_menu_1": "main-menu",
           "menu_title_2": "Customer Service",
@@ -34,7 +34,7 @@
           "newsletter_description": "Get the latest updates on new products and upcoming sales.",
           "social_facebook": "https://www.facebook.com/",
           "social_tiktok": "https://www.tiktok.com/@bakazestore",
-          "social_instagram": "https://www.instagram.com/bakazestore?igsh=MWJkcG14eXpuYW90ZQ%3D%3D&utm_source=qr",
+          "social_instagram": "https://www.instagram.com/baka_ze?igsh=dXhxM2c0ZWV4Z2M%3D&utm_source=qr",
           "show_payment_icons": true
         }
       }
